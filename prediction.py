@@ -101,6 +101,5 @@ def prediction(batch_size, images_directory, annotations_path):
 
 if __name__ == '__main__':
     prediction(batch_size=6,
-            images_directory="/home/stefano/Workspace/data/mapping_challenge_dataset/raw/val/images/",
-            annotations_path="/home/stefano/Workspace/data/mapping_challenge_dataset/raw/val/annotation.json")
-
+            images_directory="data/val/images/",
+            annotations_path="data/val/annotation.json")

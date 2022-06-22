@@ -1,0 +1,8 @@
+.idea
+*.pdf
+.DS_Store
+*.tar.gz
+*.json
+*.png
+*.jpg
+polyworld_backbone

@@ -1,0 +1,13 @@
+name: polyworld
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python
+  - numpy
+  - pycocotools
+  - pytorch
+  - pyshp
+  - tqdm
+  - scikit-image
+  - scipy
