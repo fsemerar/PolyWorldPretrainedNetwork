@@ -9,8 +9,7 @@ from torch.utils.data import DataLoader
 from models.matching import OptimalMatching
 from models.backbone import R2U_Net, NonMaxSuppression, DetectionBranch
 
-from dataloader_crowdai import CrowdAI
-from pycocotools.coco import COCO
+from utils.dataloader_crowdai import CrowdAI
 
 
 def bounding_box_from_points(points):
@@ -38,24 +37,24 @@ def prediction(batch_size, images_directory, annotations_path):
     torch.autograd.set_detect_anomaly(True)
 
     model = R2U_Net()
-    model = model.cuda()
+    # model = model.cuda()
     model = model.train()
 
     head_ver = DetectionBranch()
-    head_ver = head_ver.cuda()
+    # head_ver = head_ver.cuda()
     head_ver = head_ver.train()
 
     suppression = NonMaxSuppression()
-    suppression = suppression.cuda()
+    # suppression = suppression.cuda()
 
     matching = OptimalMatching()
-    matching = matching.cuda()
+    # matching = matching.cuda()
     matching = matching.train()
 
     print("Loading pretrained model")
-    model.load_state_dict(torch.load("./trained_weights/polyworld_backbone"))
-    head_ver.load_state_dict(torch.load("./trained_weights/polyworld_seg_head"))
-    matching.load_state_dict(torch.load("./trained_weights/polyworld_matching"))
+    model.load_state_dict(torch.load("./trained_weights/polyworld_backbone", map_location=torch.device('cpu')))
+    head_ver.load_state_dict(torch.load("./trained_weights/polyworld_seg_head", map_location=torch.device('cpu')))
+    matching.load_state_dict(torch.load("./trained_weights/polyworld_matching", map_location=torch.device('cpu')))
 
     CrowdAI_dataset = CrowdAI(images_directory=images_directory, annotations_path=annotations_path)
     dataloader = DataLoader(CrowdAI_dataset, batch_size=batch_size, shuffle=False, num_workers=batch_size)
@@ -66,7 +65,7 @@ def prediction(batch_size, images_directory, annotations_path):
     predictions = []
     for i_batch, sample_batched in enumerate(train_iterator):
 
-        rgb = sample_batched['image'].cuda().float()
+        rgb = sample_batched['image'].float()  # rgb = sample_batched['image'].cuda().float()
         idx = sample_batched['image_idx']
 
         t0 = time.time()
@@ -79,7 +78,6 @@ def prediction(batch_size, images_directory, annotations_path):
         poly = matching.predict(rgb, features, graph_pressed) 
 
         speed.append(time.time() - t0)
-
 
         for i, pp in enumerate(poly):
             for p in pp:
@@ -94,12 +92,12 @@ def prediction(batch_size, images_directory, annotations_path):
 
     print("Average model speed: ", np.mean(speed) / batch_size, " [s / image]")
 
-    fp = open("predictions.json", "w")
+    fp = open("out/predictions.json", "w")
     fp.write(json.dumps(predictions))
     fp.close()
 
 
 if __name__ == '__main__':
     prediction(batch_size=6,
-            images_directory="data/val/images/",
-            annotations_path="data/val/annotation.json")
+               images_directory="data/test/",
+               annotations_path="data/test/annotation-test.json")

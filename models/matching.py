@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from copy import deepcopy
-from utils import scores_to_permutations, permutations_to_polygons
+from utils.utils import scores_to_permutations, permutations_to_polygons
 
 
 def MLP(channels: list, do_bn=True):

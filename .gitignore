@@ -1,4 +1,3 @@
-.idea
 *.pdf
 .DS_Store
 *.tar.gz
@@ -6,3 +5,11 @@
 *.png
 *.jpg
 polyworld_backbone
+*.ipynb
+
+__pycache__
+out
+.idea
+
+!data/test/000000020289.jpg
+!data/test/annotation-test.json

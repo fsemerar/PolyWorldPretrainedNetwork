@@ -1,0 +1,15 @@
+# to install it on Mac M1
+conda create -y --name polyworld python pip
+conda activate polyworld
+pip install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu pycocotools pyshp tqdm scikit-image
+
+# to delete it
+conda deactivate
+conda env remove --name polyworld
+
+# to test pytorch
+python
+import torch
+x = torch.rand(5, 3)
+print(x)
+exit()
